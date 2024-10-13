@@ -2,20 +2,48 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('Clean') {
             steps {
-                echo 'Building...'
+                script {
+                    sh 'mvn clean'
+                }
             }
         }
+
+        stage('Compile') {
+            steps {
+                script {
+                    sh 'mvn compile'
+                }
+            }
+        }
+
         stage('Test') {
             steps {
-                echo 'Testing...'
+                script {
+                    //sh 'mvn test'
+                }
             }
         }
-        stage('Deploy') {
+
+        stage('Package') {
             steps {
-                echo 'Deploying...'
+                script {
+                    sh 'mvn package'
+                }
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline completed!'
+        }
+        success {
+            echo 'Build was successful!'
+        }
+        failure {
+            echo 'Build failed.'
         }
     }
 }
