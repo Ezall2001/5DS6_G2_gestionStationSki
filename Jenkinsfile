@@ -24,10 +24,9 @@ pipeline {
 
         stage('Test') {
             steps {
-                echo "testing"
-                // script {
-                //     sh 'mvn test -DskipCompile'
-                // }
+                script {
+                    sh 'mvn test -DskipCompile'
+                }
             }
         }
 
