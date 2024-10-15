@@ -25,7 +25,7 @@ pipeline {
         stage('Sonar-Test') {
             steps {
                 script {
-                    sh 'mvn test -DskipCompile'
+                    sh 'mvn sonar:sonar'
                 }
             }
         }
