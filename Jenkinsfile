@@ -22,6 +22,14 @@ pipeline {
             }
         }
 
+        stage('Sonar-Test') {
+            steps {
+                script {
+                    sh 'mvn test -DskipCompile'
+                }
+            }
+        }
+
         stage('Test') {
             steps {
                 script {
