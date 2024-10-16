@@ -24,6 +24,7 @@ pipeline {
 
         stage('Sonar-Test') {
             steps {
+		script {
                     sh 'mvn sonar:sonar -Dsonar.host.url=http://sonar:9000'
                 }
             }
