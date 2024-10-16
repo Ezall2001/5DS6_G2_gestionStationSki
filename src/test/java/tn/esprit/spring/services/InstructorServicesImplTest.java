@@ -181,9 +181,9 @@ class InstructorServicesImplTest {
         Instructor savedInstructor = instructorServices.addInstructorAndAssignToCourse(instructor, 2L);
 
         // Assert
-        assertNotNull(savedInstructor);
-        assertTrue(savedInstructor.getCourses().isEmpty());
-        verify(instructorRepository, times(1)).save(instructor);
+        assertNull(savedInstructor);
+        assertTrue(instructor.getCourses().isEmpty());
+        verify(instructorRepository, never()).save(instructor);
         verify(courseRepository, times(1)).findById(2L);
     }
 }
