@@ -48,7 +48,7 @@ public class SkierServicesImpl implements ISkierServices {
     @Override
     public Skier assignSkierToSubscription(Long numSkier, Long numSubscription) {
         Skier skier = skierRepository.findById(numSkier).orElse(null);
-	if(skier == null) return null;
+	if(skier == null) {return null;}
         Subscription subscription = subscriptionRepository.findById(numSubscription).orElse(null);
         skier.setSubscription(subscription);
         return skierRepository.save(skier);
@@ -80,7 +80,7 @@ public class SkierServicesImpl implements ISkierServices {
     @Override
     public Skier assignSkierToPiste(Long numSkieur, Long numPiste) {
         Skier skier = skierRepository.findById(numSkieur).orElse(null);
-	if(skier == null){ return null}
+	if(skier == null){ return null;}
         Piste piste = pisteRepository.findById(numPiste).orElse(null);
 	
         try {
