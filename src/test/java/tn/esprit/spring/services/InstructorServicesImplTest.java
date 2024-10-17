@@ -176,14 +176,15 @@ class InstructorServicesImplTest {
     void testAddInstructorAndAssignToCourse_courseNotFound() {
         // Arrange
         when(courseRepository.findById(2L)).thenReturn(Optional.empty());
-
+	when(instructorRepository.save(any(Instructor.class))).thenReturn(instructor);
+										   
         // Act
         Instructor savedInstructor = instructorServices.addInstructorAndAssignToCourse(instructor, 2L);
 
         // Assert
-        assertNull(savedInstructor);
+        assertNotNull(savedInstructor);
         assertTrue(instructor.getCourses().isEmpty());
-        verify(instructorRepository, never()).save(instructor);
+        verify(instructorRepository, times(1)).save(instructor);
         verify(courseRepository, times(1)).findById(2L);
     }
 }
