@@ -45,8 +45,7 @@ public class InstructorServicesImpl implements IInstructorServices{
         Set<Course> courseSet = new HashSet<>();
 	course.ifPresent(courseSet::add);
         instructor.setCourses(courseSet);
-        Instructor savedInstructor = instructorRepository.save(instructor);
-	return savedInstructor;
+        return instructorRepository.save(instructor);
     }
 
 

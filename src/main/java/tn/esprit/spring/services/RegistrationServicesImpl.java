@@ -32,7 +32,7 @@ public class RegistrationServicesImpl implements  IRegistrationServices{
     @Override
     public Registration assignRegistrationToCourse(Long numRegistration, Long numCourse) {
         Registration registration = registrationRepository.findById(numRegistration).orElse(null);
-	if(registration == null) return null;
+	if(registration == null) {return null;}
         Course course = courseRepository.findById(numCourse).orElse(null);
         registration.setCourse(course);
         return registrationRepository.save(registration);
