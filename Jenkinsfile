@@ -22,18 +22,19 @@ pipeline {
             }
         }
 
-        stage('Sonar-Test') {
-            steps {
-		script {
-                    sh 'mvn sonar:sonar -Dsonar.host.url=http://sonar:9000'
-                }
-            }
-        }
 
         stage('Test') {
             steps {
                 script {
-                    sh 'mvn test -DskipCompile'
+                    sh 'mvn verify test -DskipCompile'
+                }
+            }
+        }
+
+        stage('Sonar-Test') {
+            steps {
+		script {
+                    sh 'mvn sonar:sonar -Dsonar.host.url=http://sonar:9000'
                 }
             }
         }
