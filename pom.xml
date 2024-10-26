@@ -116,18 +116,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<version>2.8.2</version>
-				<configuration>
-					<repository>
-					    <id>nexus</id> <!-- Must match the id in distributionManagement -->
-					    <username>${env.NEXUS_USERNAME}</username>
-					    <password>${env.NEXUS_PASSWORD}</password>
-					</repository>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 </project>

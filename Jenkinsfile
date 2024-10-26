@@ -46,6 +46,14 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    sh 'mvn deploy -DskipTests -DskipCompile -DskipPackaging -Dusername=$NEXUS_USERNAME -Dpassword=$NEXUS_PASSWORD'
+                }
+            }
+        }
     }
 
     post {
