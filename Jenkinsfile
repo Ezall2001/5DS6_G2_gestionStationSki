@@ -22,6 +22,15 @@ pipeline {
             }
         }
 
+
+        stage('Test') {
+            steps {
+                script {
+                    sh 'mvn verify test -DskipCompile'
+                }
+            }
+        }
+
         stage('Sonar-Test') {
             steps {
 		script {
@@ -30,18 +39,18 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                script {
-                    sh 'mvn test -DskipCompile'
-                }
-            }
-        }
-
         stage('Package') {
             steps {
                 script {
                     sh 'mvn package -DskipTests -DskipCompile'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    sh 'mvn deploy -DskipTests -DskipCompile -DskipPackaging -Dusername=$NEXUS_USERNAME -Dpassword=$NEXUS_PASSWORD'
                 }
             }
         }

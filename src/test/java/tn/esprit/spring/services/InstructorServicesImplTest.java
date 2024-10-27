@@ -176,7 +176,8 @@ class InstructorServicesImplTest {
     void testAddInstructorAndAssignToCourse_courseNotFound() {
         // Arrange
         when(courseRepository.findById(2L)).thenReturn(Optional.empty());
-
+	when(instructorRepository.save(any(Instructor.class))).thenReturn(instructor);
+										   
         // Act
         Instructor savedInstructor = instructorServices.addInstructorAndAssignToCourse(instructor, 2L);
 
