@@ -50,7 +50,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh 'mvn deploy -DskipTests -DskipCompile -DskipPackaging -Dusername=$NEXUS_USERNAME -Dpassword=$NEXUS_PASSWORD'
+                    sh 'mvn deploy -DskipTests -DskipCompile -DskipPackaging -s mvn-settings.xml'
                 }
             }
         }
