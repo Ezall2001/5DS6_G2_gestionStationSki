@@ -10,7 +10,7 @@
 
   <servers>
     <server>
-      <id>nexus-releases</id>
+      <id>nexus-snapshots</id>
       <username>${env.NEXUS_USERNAME}</username>
       <password>${env.NEXUS_PASSWORD}</password>
     </server>
