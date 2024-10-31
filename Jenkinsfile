@@ -50,6 +50,7 @@ pipeline {
         stage('Deploy-Nexus') {
             steps {
                 script {
+		    sh 'mvn versions:set -DnewVersion="${env.BUILD_NUMBER}"-SNAPSHOT -s mvn-settings.xml'
                     sh 'mvn deploy -DskipTests -DskipCompile -DskipPackaging -s mvn-settings.xml'
                 }
             }
