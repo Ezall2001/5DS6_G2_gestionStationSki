@@ -47,10 +47,32 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy-Nexus') {
             steps {
                 script {
                     sh 'mvn deploy -DskipTests -DskipCompile -DskipPackaging -s mvn-settings.xml'
+                }
+            }
+        }
+
+        stage('Build-Image') {
+            steps {
+                script {
+                    sh 'docker build -t ski_station .'
+                }
+            }
+        }
+        stage('Push-Image-Dockerhub') {
+            steps {
+                script {
+                    sh 'placeholder'
+                }
+            }
+        }
+        stage('Deploy-Container') {
+            steps {
+                script {
+                    sh 'docker-compose down && docker-compose up -d'
                 }
             }
         }
