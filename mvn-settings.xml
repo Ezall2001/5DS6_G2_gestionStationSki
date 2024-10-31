@@ -3,6 +3,26 @@
 <settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 https://maven.apache.org/xsd/settings-1.2.0.xsd">
+  <profiles> 
+	<profile>
+		<id>release</id>
+		<activation>
+			<activeByDefault>false</activeByDefault>
+		</activation>
+		<properties>
+			<repo.url>http://nexus:8081/repository/maven-releases/</repo.url>
+		</properties>
+	</profile>
+	<profile>
+		<id>snapshot</id>
+		<activation>
+			<activeByDefault>false</activeByDefault>
+		</activation>
+		<properties>
+			<repo.url>http://nexus:8081/repository/maven-snapshots/</repo.url>
+		</properties>
+	</profile>
+  </profiles>
 
   <pluginGroups> </pluginGroups>
 
@@ -11,6 +31,12 @@
   <servers>
     <server>
       <id>nexus-snapshots</id>
+      <username>${env.NEXUS_USERNAME}</username>
+      <password>${env.NEXUS_PASSWORD}</password>
+    </server>
+
+    <server>
+      <id>nexus-releases</id>
       <username>${env.NEXUS_USERNAME}</username>
       <password>${env.NEXUS_PASSWORD}</password>
     </server>
@@ -27,6 +53,5 @@
     </mirror>
   </mirrors>
 
-  <profiles> </profiles>
 
 </settings>

@@ -50,7 +50,8 @@ pipeline {
         stage('Deploy-Nexus') {
             steps {
                 script {
-		    sh "mvn deploy -DskipTests -DskipCompile -DskipPackaging -Dproject.version=${BUILD_NUMBER}-SNAPSHOT -s mvn-settings.xml"
+		    sh "mvn versions:set -DnewVersion=1.0.${BUILD_NUMBER}-SNAPSHOT"
+		    sh "mvn deploy -DskipTests -DskipCompile -DskipPackaging -s mvn-settings.xml -P snapshot"
                 }
             }
         }
