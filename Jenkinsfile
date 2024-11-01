@@ -5,6 +5,14 @@ pipeline {
         maven 'Maven 3.9.9'
     }
 
+    environment {
+        DOCKERHUB_USERNAME = credentials('DOCKERHUB_USERNAME')
+        DOCKERHUB_PASSWORD = credentials('DOCKERHUB_PASSWORD')
+        SONAR_TOKEN = credentials('SONAR_TOKEN')
+        NEXUS_USERNAME = credentials('NEXUS_USERNAME')
+        NEXUS_PASSWORD = credentials('NEXUS_PASSWORD')
+    }
+
     stages {
         stage('Clean') {
             steps {
@@ -23,7 +31,7 @@ pipeline {
         }
 
 
-        stage('Test') {
+        stage('Junit & Mockito') {
             steps {
                 script {
                     sh 'mvn verify test -DskipCompile'
