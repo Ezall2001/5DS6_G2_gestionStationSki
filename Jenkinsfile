@@ -90,7 +90,7 @@ pipeline {
         stage('Deploy-Container') {
             steps {
                 script {
-                    sh 'docker-compose down && docker-compose up -d'
+                    sh 'docker compose down && docker compose up -d'
                 }
             }
         }
