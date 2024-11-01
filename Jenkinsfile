@@ -74,7 +74,7 @@ pipeline {
         stage('Build-Image') {
             steps {
                 script {
-                    sh 'docker build -t armenBakir_G2_GestionStationSki:1.0.${BUILD_NUMBER}-SNAPSHOT .'
+                    sh 'docker build -t armenbakir_g2_gestionstationski:1.0.${BUILD_NUMBER}-SNAPSHOT .'
                 }
             }
         }
