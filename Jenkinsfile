@@ -6,11 +6,20 @@ pipeline {
     }
 
     environment {
-        DOCKERHUB_USERNAME = credentials('DOCKERHUB_USERNAME')
-        DOCKERHUB_PASSWORD = credentials('DOCKERHUB_PASSWORD')
+	VERSION = "1.0.${BUILD_NUMBER}-SNAPSHOT"
+
         SONAR_TOKEN = credentials('SONAR_TOKEN')
+
         NEXUS_USERNAME = credentials('NEXUS_USERNAME')
         NEXUS_PASSWORD = credentials('NEXUS_PASSWORD')
+
+        DOCKERHUB_USERNAME = credentials('DOCKERHUB_USERNAME')
+        DOCKERHUB_PASSWORD = credentials('DOCKERHUB_PASSWORD')
+	DOCKER_REPOSITORY_NAME = armenbakir_g2_gestionstationski
+	DOCKER_REPOSITORY_NAMESPACE = ezall
+	DOCKER_REPOSITORY = "${DOCKER_REPOSITORY_NAME}/${DOCKER_REPOSITORY_NAMESPACE}:${VERSION}"
+
+	APP_IMAGE = "${DOCKER_REPOSITORY}:${VERSION}"
     }
 
     stages {
@@ -25,7 +34,7 @@ pipeline {
         stage('Versioning') {
             steps {
                 script {
-		    sh "mvn versions:set -DnewVersion=1.0.${BUILD_NUMBER}-SNAPSHOT"
+		    sh "mvn versions:set -DnewVersion=${VERSION}"
                 }
             }
         }
@@ -74,7 +83,7 @@ pipeline {
         stage('Build-Image') {
             steps {
                 script {
-                    sh 'docker build -t armenbakir_g2_gestionstationski:1.0.${BUILD_NUMBER}-SNAPSHOT .'
+                    sh "docker build -t ${APP_IMAGE} ."
                 }
             }
         }
@@ -83,6 +92,9 @@ pipeline {
                 script {
 		    sh '''
                     echo "$DOCKERHUB_PASSWORD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
+		    docker tag "$APP_IMAGE" "$DOCKER_REPOSITORY"
+		    docker push "$DOCKER_REPOSITORY"
+		    docker image rm "$APP_IMAGE"
                     '''
                 }
             }
