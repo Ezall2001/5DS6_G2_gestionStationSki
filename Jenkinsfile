@@ -74,14 +74,16 @@ pipeline {
         stage('Build-Image') {
             steps {
                 script {
-                    sh 'docker build -t ski_station .'
+                    sh 'docker build -t ski_station:1.0.${BUILD_NUMBER}-SNAPSHOT .'
                 }
             }
         }
         stage('Push-Image-Dockerhub') {
             steps {
                 script {
-                    sh 'placeholder'
+		    sh '''
+                    echo "$DOCKERHUB_PASSWORD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
+                    '''
                 }
             }
         }
