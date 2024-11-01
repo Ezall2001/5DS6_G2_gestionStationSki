@@ -22,6 +22,14 @@ pipeline {
             }
         }
 
+        stage('Versioning') {
+            steps {
+                script {
+		    sh "mvn versions:set -DnewVersion=1.0.${BUILD_NUMBER}-SNAPSHOT"
+                }
+            }
+        }
+
         stage('Compile') {
             steps {
                 script {
@@ -58,7 +66,6 @@ pipeline {
         stage('Deploy-Nexus') {
             steps {
                 script {
-		    sh "mvn versions:set -DnewVersion=1.0.${BUILD_NUMBER}-SNAPSHOT"
 		    sh "mvn deploy -DskipTests -DskipCompile -DskipPackaging -s mvn-settings.xml -P snapshot"
                 }
             }
