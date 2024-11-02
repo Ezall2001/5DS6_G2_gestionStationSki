@@ -1,4 +1,4 @@
-/*pipeline {
+pipeline {
     agent any
 
     tools {
@@ -6,7 +6,7 @@
     }
 
     environment {
-	VERSION = "1.0.${BUILD_NUMBER}-SNAPSHOT"
+	    VERSION = "1.0.${BUILD_NUMBER}-SNAPSHOT"
 
         SONAR_TOKEN = credentials('SONAR_TOKEN')
 
@@ -15,11 +15,11 @@
 
         DOCKERHUB_USERNAME = credentials('DOCKERHUB_USERNAME')
         DOCKERHUB_PASSWORD = credentials('DOCKERHUB_PASSWORD')
-	DOCKER_REPOSITORY_NAME = 'armenbakir_g2_gestionstationski'
-	DOCKER_REPOSITORY_NAMESPACE = 'ezall'
-	DOCKER_REPOSITORY = "${DOCKER_REPOSITORY_NAMESPACE}/${DOCKER_REPOSITORY_NAME}:${VERSION}"
+	    DOCKER_REPOSITORY_NAME = 'armenbakir_g2_gestionstationski'
+	    DOCKER_REPOSITORY_NAMESPACE = 'ezall'
+	    DOCKER_REPOSITORY = "${DOCKER_REPOSITORY_NAMESPACE}/${DOCKER_REPOSITORY_NAME}:${VERSION}"
 
-	APP_IMAGE = "${DOCKER_REPOSITORY_NAME}:${VERSION}"
+	    APP_IMAGE = "${DOCKER_REPOSITORY_NAME}:${VERSION}"
     }
 
     stages {
@@ -120,4 +120,3 @@
         }
     }
 }
-*/
