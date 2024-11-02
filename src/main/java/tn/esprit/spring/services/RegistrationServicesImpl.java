@@ -32,6 +32,7 @@ public class RegistrationServicesImpl implements  IRegistrationServices{
     @Override
     public Registration assignRegistrationToCourse(Long numRegistration, Long numCourse) {
         Registration registration = registrationRepository.findById(numRegistration).orElse(null);
+	if(registration == null) {return null;}
         Course course = courseRepository.findById(numCourse).orElse(null);
         registration.setCourse(course);
         return registrationRepository.save(registration);
@@ -51,6 +52,7 @@ public class RegistrationServicesImpl implements  IRegistrationServices{
             log.info("Sorry, you're already register to this course of the week :" + registration.getNumWeek());
             return null;
         }
+
 
         int ageSkieur = Period.between(skier.getDateOfBirth(), LocalDate.now()).getYears();
         log.info("Age " + ageSkieur);

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 https://maven.apache.org/xsd/settings-1.2.0.xsd">
+  <profiles> 
+	<profile>
+		<id>release</id>
+		<activation>
+			<activeByDefault>false</activeByDefault>
+		</activation>
+		<properties>
+			<repo.url>http://nexus:8081/repository/maven-releases/</repo.url>
+		</properties>
+	</profile>
+	<profile>
+		<id>snapshot</id>
+		<activation>
+			<activeByDefault>false</activeByDefault>
+		</activation>
+		<properties>
+			<repo.url>http://nexus:8081/repository/maven-snapshots/</repo.url>
+		</properties>
+	</profile>
+  </profiles>
+
+  <pluginGroups> </pluginGroups>
+
+  <proxies> </proxies>
+
+  <servers>
+    <server>
+      <id>nexus-snapshots</id>
+      <username>${env.NEXUS_USERNAME}</username>
+      <password>${env.NEXUS_PASSWORD}</password>
+    </server>
+
+    <server>
+      <id>nexus-releases</id>
+      <username>${env.NEXUS_USERNAME}</username>
+      <password>${env.NEXUS_PASSWORD}</password>
+    </server>
+
+  </servers>
+
+  <mirrors>
+    <mirror>
+      <id>maven-default-http-blocker</id>
+      <mirrorOf>external:http:*</mirrorOf>
+      <name>Pseudo repository to mirror external repositories initially using HTTP.</name>
+      <url>http://0.0.0.0/</url>
+      <blocked>true</blocked>
+    </mirror>
+  </mirrors>
+
+
+</settings>
