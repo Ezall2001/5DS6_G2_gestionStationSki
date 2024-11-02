@@ -30,7 +30,7 @@ pipeline {
                 }
             }
         }
-
+ 
         stage('Versioning') {
             steps {
                 script {
