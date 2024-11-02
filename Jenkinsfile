@@ -15,6 +15,7 @@ pipeline {
 
         DOCKERHUB_USERNAME = credentials('DOCKERHUB_USERNAME')
         DOCKERHUB_PASSWORD = credentials('DOCKERHUB_PASSWORD')
+        
         DOCKER_REPOSITORY_NAME = 'moataztej_g2_gestionstationski'
         DOCKER_REPOSITORY_NAMESPACE = 'moatez1'
         DOCKER_REPOSITORY = "${DOCKER_REPOSITORY_NAMESPACE}/${DOCKER_REPOSITORY_NAME}:${VERSION}"
