@@ -9,7 +9,7 @@ import tn.esprit.spring.entities.Registration;
 import tn.esprit.spring.entities.Support;
 import tn.esprit.spring.entities.TypeSubscription;
 import tn.esprit.spring.services.IRegistrationServices;
-
+import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 @Tag(name = "\uD83D\uDDD3️Registration Management")
@@ -57,5 +57,5 @@ public class RegistrationRestController {
         List<Registration> registrations = registrationServices.getAllRegistrations();
         return ResponseEntity.ok(registrations);
     }
-    
+
 }
