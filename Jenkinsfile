@@ -109,6 +109,13 @@ pipeline {
                 }
             }
         }
+        stage('Remove old image') {
+            steps {
+                script {
+                    sh 'docker image rm "$DOCKER_REPOSITORY -f" && docker rm application_database'
+                }
+            }
+        }
         stage('Restart Container') {
             steps {
                 script {
