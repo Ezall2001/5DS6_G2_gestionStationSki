@@ -110,8 +110,13 @@ pipeline {
         stage('Remove old image') {
             steps {
                 script {
-                    sh 'docker image rm "$DOCKER_REPOSITORY" -f && docker image rm "$DOCKER_REPOSITORY_LATEST" -f && docker rm application_database'
+                    try {
+                        sh 'docker image rm "$DOCKER_REPOSITORY" -f && docker image rm "$DOCKER_REPOSITORY_LATEST" -f && docker rm application_database'
+                    } catch (Exception e) {
+                        echo "An error occurred while removing old images: ${e.message}"
+                    }
                 }
+                
             }
         }
         stage('Pulling images and restart Container') {
