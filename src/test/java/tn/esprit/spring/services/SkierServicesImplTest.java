@@ -198,4 +198,5 @@ public class SkierServicesImplTest {
 
         verify(skierRepository, times(1)).findBySubscription_TypeSub(TypeSubscription.ANNUAL);
     }
+    //commentaire de test
 }
