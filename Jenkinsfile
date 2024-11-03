@@ -113,7 +113,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'docker rm application_database && docker image rm "$DOCKER_REPOSITORY" -f && docker image rm "$DOCKER_REPOSITORY_LATEST" -f'
+                        sh 'docker image rm "$DOCKER_REPOSITORY" -f && docker image rm "$DOCKER_REPOSITORY_LATEST" -f'
                     } catch (Exception e) {
                         echo "An error occurred while removing old images: ${e.message}"
                     }
