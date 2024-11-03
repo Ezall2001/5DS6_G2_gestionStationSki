@@ -96,8 +96,8 @@ pipeline {
                     echo "$DOCKERHUB_PASSWORD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
 		    docker tag "$APP_IMAGE" "$DOCKER_REPOSITORY"
 		    docker push "$DOCKER_REPOSITORY"
-		    docker image rm "$DOCKER_REPOSITORY"
-		    docker image rm "$DOCKER_REPOSITORY_LATEST"
+		    docker image rm "$DOCKER_REPOSITORY -f"
+		    docker image rm "$DOCKER_REPOSITORY_LATEST -f"
                     '''
                 }
             }
