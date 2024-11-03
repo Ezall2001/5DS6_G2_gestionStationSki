@@ -19,6 +19,7 @@ pipeline {
         DOCKER_REPOSITORY_NAME = 'rimhammami_g2_gestionstationski'
 	    DOCKER_REPOSITORY_NAMESPACE = 'hammamirim'
 	    DOCKER_REPOSITORY = "${DOCKER_REPOSITORY_NAMESPACE}/${DOCKER_REPOSITORY_NAME}:${VERSION}"
+	    DOCKER_REPOSITORY_LATEST = "${DOCKER_REPOSITORY_NAMESPACE}/${DOCKER_REPOSITORY_NAME}:latest"
 
 	    APP_IMAGE = "${DOCKER_REPOSITORY_NAME}:${VERSION}"
     }
@@ -95,7 +96,8 @@ pipeline {
                     echo "$DOCKERHUB_PASSWORD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
 		    docker tag "$APP_IMAGE" "$DOCKER_REPOSITORY"
 		    docker push "$DOCKER_REPOSITORY"
-		    docker image rm "$APP_IMAGE"
+		    docker image rm "$DOCKER_REPOSITORY"
+		    docker image rm "$DOCKER_REPOSITORY_LATEST"
                     '''
                 }
             }

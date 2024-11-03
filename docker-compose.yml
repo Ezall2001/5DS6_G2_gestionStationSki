@@ -1,8 +1,6 @@
 services:
   app:
-    build:
-      context: .  
-      dockerfile: Dockerfile
+    image: hammamirim/rimhammami_g2_gestionstationski:latest
     container_name: ski_station
     restart: always
     environment:
