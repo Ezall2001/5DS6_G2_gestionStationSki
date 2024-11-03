@@ -95,7 +95,9 @@ pipeline {
 		    sh '''
                     echo "$DOCKERHUB_PASSWORD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
 		    docker tag "$APP_IMAGE" "$DOCKER_REPOSITORY"
+		    docker tag "$APP_IMAGE" "$DOCKER_REPOSITORY_LATEST"
 		    docker push "$DOCKER_REPOSITORY"
+		    docker push "$DOCKER_REPOSITORY_LATEST"
                     '''
                 }
             }
