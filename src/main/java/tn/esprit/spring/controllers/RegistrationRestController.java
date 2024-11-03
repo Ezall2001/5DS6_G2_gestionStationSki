@@ -49,4 +49,13 @@ public class RegistrationRestController {
                                                                   @PathVariable("support") Support support) {
         return registrationServices.numWeeksCourseOfInstructorBySupport(numInstructor,support);
     }
+
+
+    @Operation(description = "Get All Registrations")
+    @GetMapping("/all")
+    public ResponseEntity<List<Registration>> getAllRegistrations() {
+        List<Registration> registrations = registrationServices.getAllRegistrations();
+        return ResponseEntity.ok(registrations);
+    }
+    
 }

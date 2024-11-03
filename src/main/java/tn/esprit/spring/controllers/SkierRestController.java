@@ -30,6 +30,7 @@ public class SkierRestController {
                                            @PathVariable("numCourse") Long numCourse){
         return  skierServices.addSkierAndAssignToCourse(skier,numCourse);
     }
+    
     @Operation(description = "Assign Skier To Subscription")
     @PutMapping("/assignToSub/{numSkier}/{numSub}")
     public Skier assignToSubscription(@PathVariable("numSkier")Long numSkier,
@@ -48,6 +49,7 @@ public class SkierRestController {
     public List<Skier> retrieveSkiersBySubscriptionType(TypeSubscription typeSubscription) {
         return skierServices.retrieveSkiersBySubscriptionType(typeSubscription);
     }
+
     @Operation(description = "Retrieve Skier by Id")
     @GetMapping("/get/{id-skier}")
     public Skier getById(@PathVariable("id-skier") Long numSkier){

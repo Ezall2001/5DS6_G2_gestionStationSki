@@ -28,6 +28,7 @@ public class Skier implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	Long numSkier;
+	
 	String firstName;
 	String lastName;
 	LocalDate dateOfBirth;
@@ -47,10 +48,5 @@ public class Skier implements Serializable {
 
 	@OneToMany(mappedBy = "skier")
 	Set<Registration> registrations;
-
-
-
-
-
 
 }

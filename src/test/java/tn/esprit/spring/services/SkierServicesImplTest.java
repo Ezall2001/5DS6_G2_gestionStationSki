@@ -44,7 +44,6 @@ public class SkierServicesImplTest {
         skier.setNumSkier(1L);
         skier.setFirstName("John");
         skier.setLastName("Doe");
-
         subscription = new Subscription();
         subscription.setNumSub(1L);
         subscription.setStartDate(LocalDate.now());
