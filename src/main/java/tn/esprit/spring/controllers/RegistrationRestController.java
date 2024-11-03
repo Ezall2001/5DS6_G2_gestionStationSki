@@ -48,11 +48,4 @@ public class RegistrationRestController {
                                                                   @PathVariable("support") Support support) {
         return registrationServices.numWeeksCourseOfInstructorBySupport(numInstructor,support);
     }
-
-    @Operation(description = "Retrieve all Courses")
-    @GetMapping("/all")
-    public List<Registration> getAllRegistration(){
-        return registrationServices.retrieveAllRegistration();
-    }
-
 }
