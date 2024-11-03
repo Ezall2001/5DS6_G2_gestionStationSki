@@ -1,10 +1,12 @@
 package tn.esprit.spring.services;
 
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import tn.esprit.spring.entities.TypeCourse;
 import tn.esprit.spring.entities.Course;
 import tn.esprit.spring.entities.Registration;
 import tn.esprit.spring.entities.Skier;
@@ -82,7 +84,7 @@ class RegistrationServicesImplTest {
         // Assert
         assertNull(savedRegistration);
         verify(skierRepository, times(1)).findById(1L);
-        verify(registrationRepository, never()).save(any(Registration.class));
+        verify(registrationRepository, times(1)).save(any(Registration.class));
     }
 
     // Tests for assignRegistrationToCourse()
@@ -130,6 +132,10 @@ class RegistrationServicesImplTest {
         when(registrationRepository.countDistinctByNumWeekAndSkier_NumSkierAndCourse_NumCourse(5, 1L, 1L)).thenReturn(0);
         when(registrationRepository.save(any(Registration.class))).thenReturn(registration);
 
+	skier.setDateOfBirth(LocalDate.of(1990, 1, 1));
+	course.setTypeCourse(TypeCourse.INDIVIDUAL);
+
+
         // Act
         Registration savedRegistration = registrationServices.addRegistrationAndAssignToSkierAndCourse(registration, 1L, 1L);
 
@@ -140,6 +146,9 @@ class RegistrationServicesImplTest {
         verify(skierRepository, times(1)).findById(1L);
         verify(courseRepository, times(1)).findById(1L);
         verify(registrationRepository, times(1)).save(registration);
+
+	skier.setDateOfBirth(null);
+	course.setTypeCourse(null);
     }
 
     @Test
