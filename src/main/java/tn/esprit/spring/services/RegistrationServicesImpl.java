@@ -106,7 +106,7 @@ public class RegistrationServicesImpl implements  IRegistrationServices{
     }
 
     @Override
-    public List<Registration> getAllRegistrations() {
+    public List<Registration> retrieveAllRegistration() {
         return registrationRepository.findAll();
     }
 

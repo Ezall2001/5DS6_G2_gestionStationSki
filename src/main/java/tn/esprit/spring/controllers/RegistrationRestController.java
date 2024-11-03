@@ -9,7 +9,6 @@ import tn.esprit.spring.entities.Registration;
 import tn.esprit.spring.entities.Support;
 import tn.esprit.spring.entities.TypeSubscription;
 import tn.esprit.spring.services.IRegistrationServices;
-import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 @Tag(name = "\uD83D\uDDD3️Registration Management")
@@ -50,12 +49,10 @@ public class RegistrationRestController {
         return registrationServices.numWeeksCourseOfInstructorBySupport(numInstructor,support);
     }
 
-
-    @Operation(description = "Get All Registrations")
+    @Operation(description = "Retrieve all Courses")
     @GetMapping("/all")
-    public ResponseEntity<List<Registration>> getAllRegistrations() {
-        List<Registration> registrations = registrationServices.getAllRegistrations();
-        return ResponseEntity.ok(registrations);
+    public List<Registration> getAllRegistration(){
+        return registrationServices.retrieveAllRegistration();
     }
 
 }
