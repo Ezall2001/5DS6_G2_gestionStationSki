@@ -44,6 +44,7 @@ public class SkierServicesImplTest {
         skier.setNumSkier(1L);
         skier.setFirstName("John");
         skier.setLastName("Doe");
+
         subscription = new Subscription();
         subscription.setNumSub(1L);
         subscription.setStartDate(LocalDate.now());
@@ -75,7 +76,7 @@ public class SkierServicesImplTest {
         verify(skierRepository, times(1)).findAll();
     }
 
-    // Test for addSkier method
+    // Test for addSkier method annual
     @Test
     public void testAddSkier_AnnualSubscription() {
         skier.setSubscription(subscription);
@@ -88,7 +89,7 @@ public class SkierServicesImplTest {
 
         verify(skierRepository, times(1)).save(skier);
     }
-
+    //semestriel
     @Test
     public void testAddSkier_SemestrielSubscription() {
         subscription.setTypeSub(TypeSubscription.SEMESTRIEL);
@@ -102,6 +103,41 @@ public class SkierServicesImplTest {
 
         verify(skierRepository, times(1)).save(skier);
     }
+    //Monthly
+    @Test
+    public void testAddSkier_MonthlySubscription() {
+        subscription.setTypeSub(TypeSubscription.MONTHLY);
+        skier.setSubscription(subscription);
+        when(skierRepository.save(skier)).thenReturn(skier);
+
+        Skier savedSkier = skierServices.addSkier(skier);
+
+        assertNotNull(savedSkier);
+        assertEquals(LocalDate.now().plusMonths(1), savedSkier.getSubscription().getEndDate());
+
+        verify(skierRepository, times(1)).save(skier);
+    }
+    //test add skier where the subscription exists but getTypeSub() is null
+    @Test
+    public void testAddSkier_WithNullTypeSub() {
+        // Set up skier with a subscription that has a null TypeSub
+        subscription.setTypeSub(null);
+        skier.setSubscription(subscription);
+        
+        // Mock the save operation
+        when(skierRepository.save(skier)).thenReturn(skier);
+
+        // Call the method
+        Skier savedSkier = skierServices.addSkier(skier);
+
+        // Assert that the skier is saved without setting an end date
+        assertNotNull(savedSkier);
+        assertNull(savedSkier.getSubscription().getEndDate());
+
+        // Verify save was called once
+        verify(skierRepository, times(1)).save(skier);
+    }
+
 
     // Test for assignSkierToSubscription method
     @Test
@@ -119,7 +155,7 @@ public class SkierServicesImplTest {
         verify(subscriptionRepository, times(1)).findById(1L);
         verify(skierRepository, times(1)).save(skier);
     }
-
+    //assign skier to sub with skier not found
     @Test
     public void testAssignSkierToSubscription_SkierNotFound() {
         when(skierRepository.findById(1L)).thenReturn(Optional.empty());
@@ -148,6 +184,79 @@ public class SkierServicesImplTest {
         });
 
         verify(skierRepository, times(1)).deleteById(1L);
+    }
+    //add skier with unsupported type sub
+    @Test
+    public void testAddSkier_WithUnsupportedTypeSub() {
+        // Set up skier with a subscription that has an unsupported TypeSub
+        subscription.setTypeSub(null); 
+        skier.setSubscription(subscription);
+
+        // Mock the save operation
+        when(skierRepository.save(skier)).thenReturn(skier);
+
+        // Call the method
+        Skier savedSkier = skierServices.addSkier(skier);
+
+        // Assert that the skier is saved without setting an end date
+        assertNotNull(savedSkier);
+        assertNull(savedSkier.getSubscription().getEndDate()); // Unsupported types shouldn't set end date
+
+        // Verify save was called once
+        verify(skierRepository, times(1)).save(skier);
+    }
+    //add skier and assign to course with registration
+    @Test
+    public void testAddSkierAndAssignToCourse_WithRegistrations() {
+        // Arrange
+        skier.setRegistrations(new HashSet<>(Arrays.asList(new Registration(), new Registration())));
+        when(skierRepository.save(skier)).thenReturn(skier);
+        when(courseRepository.getById(1L)).thenReturn(new Course());
+
+        // Act
+        Skier result = skierServices.addSkierAndAssignToCourse(skier, 1L);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(skier, result);  // Ensure the saved skier is returned
+
+        // Verify that the repository save method was called on each registration
+        for (Registration registration : skier.getRegistrations()) {
+            assertEquals(skier, registration.getSkier());
+            assertNotNull(registration.getCourse());
+            verify(registrationRepository, times(1)).save(registration);
+        }
+
+        // Verify course retrieval and skier save
+        verify(courseRepository, times(1)).getById(1L);
+        verify(skierRepository, times(1)).save(skier);
+    }
+    //Assign skier to piste when skier not found
+    @Test
+    public void testAssignSkierToPiste_SkierNotFound() {
+        when(skierRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Skier result = skierServices.assignSkierToPiste(1L, 1L);
+
+        assertNull(result);
+        verify(skierRepository, times(1)).findById(1L);
+        verify(pisteRepository, never()).findById(anyLong());
+        verify(skierRepository, never()).save(any(Skier.class));
+    }
+    //assign skier to piste when piste is null
+    @Test
+    public void testAssignSkierToPiste_PisteNotFound() {
+        when(skierRepository.findById(1L)).thenReturn(Optional.of(skier));
+        when(pisteRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Skier result = skierServices.assignSkierToPiste(1L, 1L);
+
+        // Check that the method returns without assigning a piste
+        assertNotNull(result); // Ensure skier is returned
+        assertTrue(result.getPistes() == null || result.getPistes().isEmpty()); // pistes should be empty or null
+        verify(skierRepository, times(1)).findById(1L);
+        verify(pisteRepository, times(1)).findById(1L);
+        verify(skierRepository, never()).save(any(Skier.class)); // save should not be called
     }
 
     // Test for retrieveSkier method
@@ -196,5 +305,20 @@ public class SkierServicesImplTest {
         assertTrue(retrievedSkiers.isEmpty());
 
         verify(skierRepository, times(1)).findBySubscription_TypeSub(TypeSubscription.ANNUAL);
+    }
+    //commentaire de test
+    // Edge case for adding a skier with a null subscription
+    //To Ensure that adding a skier without a subscription does not cause an error
+    @Test
+    public void testAddSkier_NullSubscription() {
+        skier.setSubscription(null);
+        when(skierRepository.save(skier)).thenReturn(skier);
+
+        Skier savedSkier = skierServices.addSkier(skier);
+
+        assertNotNull(savedSkier);
+        assertNull(savedSkier.getSubscription());
+
+        verify(skierRepository, times(1)).save(skier);
     }
 }

@@ -31,16 +31,18 @@ public class SkierServicesImpl implements ISkierServices {
 
     @Override
     public Skier addSkier(Skier skier) {
-        switch (skier.getSubscription().getTypeSub()) {
-            case ANNUAL:
-                skier.getSubscription().setEndDate(skier.getSubscription().getStartDate().plusYears(1));
-                break;
-            case SEMESTRIEL:
-                skier.getSubscription().setEndDate(skier.getSubscription().getStartDate().plusMonths(6));
-                break;
-            case MONTHLY:
-                skier.getSubscription().setEndDate(skier.getSubscription().getStartDate().plusMonths(1));
-                break;
+        if (skier.getSubscription() != null && skier.getSubscription().getTypeSub() != null) {
+            switch (skier.getSubscription().getTypeSub()) {
+                case ANNUAL:
+                    skier.getSubscription().setEndDate(skier.getSubscription().getStartDate().plusYears(1));
+                    break;
+                case SEMESTRIEL:
+                    skier.getSubscription().setEndDate(skier.getSubscription().getStartDate().plusMonths(6));
+                    break;
+                case MONTHLY:
+                    skier.getSubscription().setEndDate(skier.getSubscription().getStartDate().plusMonths(1));
+                    break;
+             }
         }
         return skierRepository.save(skier);
     }
@@ -80,9 +82,15 @@ public class SkierServicesImpl implements ISkierServices {
     @Override
     public Skier assignSkierToPiste(Long numSkieur, Long numPiste) {
         Skier skier = skierRepository.findById(numSkieur).orElse(null);
-	if(skier == null){ return null;}
+        if (skier == null) {
+            return null;
+        }
+
         Piste piste = pisteRepository.findById(numPiste).orElse(null);
-	
+        if (piste == null) {
+            return skier; // Return skier without modification if piste is not found
+        }
+
         try {
             skier.getPistes().add(piste);
         } catch (NullPointerException exception) {
