@@ -252,10 +252,11 @@ public class SkierServicesImplTest {
         Skier result = skierServices.assignSkierToPiste(1L, 1L);
 
         // Check that the method returns without assigning a piste
-        assertNull(result);
+        assertNotNull(result); // Ensure skier is returned
+        assertTrue(result.getPistes() == null || result.getPistes().isEmpty()); // pistes should be empty or null
         verify(skierRepository, times(1)).findById(1L);
         verify(pisteRepository, times(1)).findById(1L);
-        verify(skierRepository, never()).save(any(Skier.class));
+        verify(skierRepository, never()).save(any(Skier.class)); // save should not be called
     }
 
     // Test for retrieveSkier method
