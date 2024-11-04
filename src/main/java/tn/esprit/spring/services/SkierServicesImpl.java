@@ -82,9 +82,15 @@ public class SkierServicesImpl implements ISkierServices {
     @Override
     public Skier assignSkierToPiste(Long numSkieur, Long numPiste) {
         Skier skier = skierRepository.findById(numSkieur).orElse(null);
-	if(skier == null){ return null;}
+        if (skier == null) {
+            return null;
+        }
+
         Piste piste = pisteRepository.findById(numPiste).orElse(null);
-	
+        if (piste == null) {
+            return skier; // Return skier without modification if piste is not found
+        }
+
         try {
             skier.getPistes().add(piste);
         } catch (NullPointerException exception) {
