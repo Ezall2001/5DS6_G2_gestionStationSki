@@ -205,6 +205,33 @@ public class SkierServicesImplTest {
         // Verify save was called once
         verify(skierRepository, times(1)).save(skier);
     }
+    //add skier and assign to course with registration
+    @Test
+    public void testAddSkierAndAssignToCourse_WithRegistrations() {
+        // Arrange
+        skier.setRegistrations(new HashSet<>(Arrays.asList(new Registration(), new Registration())));
+        when(skierRepository.save(skier)).thenReturn(skier);
+        when(courseRepository.getById(1L)).thenReturn(new Course());
+
+        // Act
+        Skier result = skierServices.addSkierAndAssignToCourse(skier, 1L);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(skier, result);  // Ensure the saved skier is returned
+
+        // Verify that the repository save method was called on each registration
+        for (Registration registration : skier.getRegistrations()) {
+            assertEquals(skier, registration.getSkier());
+            assertNotNull(registration.getCourse());
+            verify(registrationRepository, times(1)).save(registration);
+        }
+
+        // Verify course retrieval and skier save
+        verify(courseRepository, times(1)).getById(1L);
+        verify(skierRepository, times(1)).save(skier);
+    }
+
 
 
     // Test for retrieveSkier method
