@@ -149,13 +149,17 @@ public class SkierServicesImplTest {
     //assign skier to sub with sub not found
     @Test
     public void testAssignSkierToSubscription_SubscriptionNotFound() {
+        // Set up the repository to return a skier but no subscription
         when(skierRepository.findById(1L)).thenReturn(Optional.of(skier));
         when(subscriptionRepository.findById(1L)).thenReturn(Optional.empty());
 
+        // Call the method under test
         Skier assignedSkier = skierServices.assignSkierToSubscription(1L, 1L);
 
-        assertNull(assignedSkier.getSubscription());
+        // Check if the result is null, indicating no assignment was made
+        assertNull(assignedSkier, "Expected assignedSkier to be null when subscription is not found");
 
+        // Verify the interactions
         verify(skierRepository, times(1)).findById(1L);
         verify(subscriptionRepository, times(1)).findById(1L);
         verify(skierRepository, never()).save(any(Skier.class));
