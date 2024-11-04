@@ -252,7 +252,7 @@ public class SkierServicesImplTest {
         Skier result = skierServices.assignSkierToPiste(1L, 1L);
 
         // Check that the method returns without assigning a piste
-        assertNull(result.getPistes());
+        assertNull(result);
         verify(skierRepository, times(1)).findById(1L);
         verify(pisteRepository, times(1)).findById(1L);
         verify(skierRepository, never()).save(any(Skier.class));
