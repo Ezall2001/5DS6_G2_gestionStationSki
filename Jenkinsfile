@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-	    VERSION = "1.0.${BUILD_NUMBER}-SNAPSHOT"
+	    VERSION = "1.0.${new Date().format('yyyyMMddHHmmss')}-SNAPSHOT"
 
         SONAR_TOKEN = credentials('SONAR_TOKEN')
 
@@ -16,11 +16,12 @@ pipeline {
         DOCKERHUB_USERNAME = credentials('DOCKERHUB_USERNAME')
         DOCKERHUB_PASSWORD = credentials('DOCKERHUB_PASSWORD')
         
-        DOCKER_REPOSITORY_NAME = 'moataztej_g2_gestionstationski'
-        DOCKER_REPOSITORY_NAMESPACE = 'moatez1'
-        DOCKER_REPOSITORY = "${DOCKER_REPOSITORY_NAMESPACE}/${DOCKER_REPOSITORY_NAME}:${VERSION}"
+        
+        DOCKER_REPOSITORY = "moatez1/moataztej_g2_gestionstationski:${VERSION}"
+        DOCKER_REPOSITORY_LATEST = "moatez1/moataztej_g2_gestionstationski:latest"
 
-        APP_IMAGE = "${DOCKER_REPOSITORY_NAME}:${VERSION}"
+
+        APP_IMAGE = "moataztej_g2_gestionstationski:${VERSION}"
     }
 
     stages {
@@ -88,22 +89,56 @@ pipeline {
                 }
             }
         }
-        stage('Dockerhub-Push') {
+
+        stage('Push Docker Image to Docker hub') {
             steps {
                 script {
 		    sh '''
-                    echo "$DOCKERHUB_PASSWORD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
 		    docker tag "$APP_IMAGE" "$DOCKER_REPOSITORY"
-		    docker push "$DOCKER_REPOSITORY"
-		    docker image rm "$APP_IMAGE"
+		    docker tag "$APP_IMAGE" "$DOCKER_REPOSITORY_LATEST"
+		    
                     '''
                 }
             }
         }
-        stage('Container-Deployment') {
+
+        stage('Push Docker Image to Docker hub') {
             steps {
                 script {
-                    sh 'docker-compose down && docker-compose up -d'
+		    sh '''
+                    echo "$DOCKERHUB_PASSWORD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
+		    docker push "$DOCKER_REPOSITORY"
+		    docker push "$DOCKER_REPOSITORY_LATEST"
+                    '''
+                }
+            }
+        }
+
+        stage('Stop and drop Containers') {
+            steps {
+                script {
+                    sh 'docker-compose down'
+                }
+            }
+        }
+
+        stage('Remove old image') {
+            steps {
+                script {
+                    try {
+                        sh 'docker image rm "$DOCKER_REPOSITORY" -f && docker image rm "$DOCKER_REPOSITORY_LATEST" -f && docker image rm "$APP_IMAGE" -f'
+                    } catch (Exception e) {
+                        echo "An error occurred while removing old images: ${e.message}"
+                    }
+                }
+                
+            }
+        }
+
+        stage('Pulling images and restart Container') {
+            steps {
+                script {
+                    sh 'docker-compose up -d'
                 }
             }
         }

@@ -1,8 +1,6 @@
 services:
   app:
-    build:
-      context: .  
-      dockerfile: Dockerfile
+    image: moatez1/moataztej_g2_gestionstationski:latest
     container_name: ski_station
     restart: always
     depends_on:
@@ -14,7 +12,7 @@ services:
 
   db:
     image: mysql:5.7
-    container_name: mysql_app
+    container_name: mysql_Moatez_app
     restart: always
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
