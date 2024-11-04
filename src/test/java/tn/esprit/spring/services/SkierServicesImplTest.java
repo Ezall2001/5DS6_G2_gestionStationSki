@@ -231,8 +231,18 @@ public class SkierServicesImplTest {
         verify(courseRepository, times(1)).getById(1L);
         verify(skierRepository, times(1)).save(skier);
     }
+    //Assign skier to piste when skier not found
+    @Test
+    public void testAssignSkierToPiste_SkierNotFound() {
+        when(skierRepository.findById(1L)).thenReturn(Optional.empty());
 
+        Skier result = skierServices.assignSkierToPiste(1L, 1L);
 
+        assertNull(result);
+        verify(skierRepository, times(1)).findById(1L);
+        verify(pisteRepository, never()).findById(anyLong());
+        verify(skierRepository, never()).save(any(Skier.class));
+    }
 
     // Test for retrieveSkier method
     @Test
