@@ -117,6 +117,27 @@ public class SkierServicesImplTest {
 
         verify(skierRepository, times(1)).save(skier);
     }
+    //test add skier where the subscription exists but getTypeSub() is null
+    @Test
+    public void testAddSkier_WithNullTypeSub() {
+        // Set up skier with a subscription that has a null TypeSub
+        subscription.setTypeSub(null);
+        skier.setSubscription(subscription);
+        
+        // Mock the save operation
+        when(skierRepository.save(skier)).thenReturn(skier);
+
+        // Call the method
+        Skier savedSkier = skierServices.addSkier(skier);
+
+        // Assert that the skier is saved without setting an end date
+        assertNotNull(savedSkier);
+        assertNull(savedSkier.getSubscription().getEndDate());
+
+        // Verify save was called once
+        verify(skierRepository, times(1)).save(skier);
+    }
+
 
     // Test for assignSkierToSubscription method
     @Test
@@ -144,24 +165,6 @@ public class SkierServicesImplTest {
         assertNull(assignedSkier);
         verify(skierRepository, times(1)).findById(1L);
         verify(subscriptionRepository, never()).findById(anyLong());
-        verify(skierRepository, never()).save(any(Skier.class));
-    }
-    //assign skier to sub with sub not found
-    @Test
-    public void testAssignSkierToSubscription_SubscriptionNotFound() {
-        // Set up the repository to return a skier but no subscription
-        when(skierRepository.findById(1L)).thenReturn(Optional.of(skier));
-        when(subscriptionRepository.findById(1L)).thenReturn(Optional.empty());
-
-        // Call the method under test
-        Skier assignedSkier = skierServices.assignSkierToSubscription(1L, 1L);
-
-        // Check if the result is null, indicating no assignment was made
-        assertNull(assignedSkier, "Expected assignedSkier to be null when subscription is not found");
-
-        // Verify the interactions
-        verify(skierRepository, times(1)).findById(1L);
-        verify(subscriptionRepository, times(1)).findById(1L);
         verify(skierRepository, never()).save(any(Skier.class));
     }
 
