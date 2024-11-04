@@ -260,17 +260,23 @@ public class SkierServicesImplTest {
         verify(skierRepository, never()).save(any(Skier.class)); // save should not be called
     }
     //assign skier to piste when skie and piste are found but pistes are null
-    @Test
+   @Test
     public void testAssignSkierToPiste_NullPistes() {
+        // Set up the mock behavior
         when(skierRepository.findById(1L)).thenReturn(Optional.of(skier));
         when(pisteRepository.findById(1L)).thenReturn(Optional.of(new Piste()));
 
-        skier.setPistes(null);  // Force pistes to be null to trigger the catch block
+        // Force pistes to be null to trigger the catch block
+        skier.setPistes(null);
 
-        Skier result = skierServices.assignSkierToPiste(1L, 1L);
+        // Call the method
+        skierServices.assignSkierToPiste(1L, 1L);
 
-        assertNotNull(result.getPistes());
-        assertEquals(1, result.getPistes().size());
+        // Verify that pistes are initialized and contain one element
+        assertNotNull(skier.getPistes(), "The pistes set should be initialized and not null");
+        assertEquals(1, skier.getPistes().size(), "The pistes set should contain one piste after assignment");
+
+        // Verify that save was called
         verify(skierRepository, times(1)).save(skier);
     }
 
