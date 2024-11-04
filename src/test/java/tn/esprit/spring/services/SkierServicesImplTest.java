@@ -76,7 +76,7 @@ public class SkierServicesImplTest {
         verify(skierRepository, times(1)).findAll();
     }
 
-    // Test for addSkier method
+    // Test for addSkier method annual
     @Test
     public void testAddSkier_AnnualSubscription() {
         skier.setSubscription(subscription);
@@ -89,7 +89,7 @@ public class SkierServicesImplTest {
 
         verify(skierRepository, times(1)).save(skier);
     }
-
+    //semestriel
     @Test
     public void testAddSkier_SemestrielSubscription() {
         subscription.setTypeSub(TypeSubscription.SEMESTRIEL);
@@ -100,6 +100,20 @@ public class SkierServicesImplTest {
 
         assertNotNull(savedSkier);
         assertEquals(LocalDate.now().plusMonths(6), savedSkier.getSubscription().getEndDate());
+
+        verify(skierRepository, times(1)).save(skier);
+    }
+    //Monthly
+    @Test
+    public void testAddSkier_MonthlySubscription() {
+        subscription.setTypeSub(TypeSubscription.MONTHLY);
+        skier.setSubscription(subscription);
+        when(skierRepository.save(skier)).thenReturn(skier);
+
+        Skier savedSkier = skierServices.addSkier(skier);
+
+        assertNotNull(savedSkier);
+        assertEquals(LocalDate.now().plusMonths(1), savedSkier.getSubscription().getEndDate());
 
         verify(skierRepository, times(1)).save(skier);
     }
