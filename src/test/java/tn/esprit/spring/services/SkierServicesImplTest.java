@@ -243,6 +243,7 @@ public class SkierServicesImplTest {
         verify(pisteRepository, never()).findById(anyLong());
         verify(skierRepository, never()).save(any(Skier.class));
     }
+    
     //assign skier to piste when piste is null
     @Test
     public void testAssignSkierToPiste_PisteNotFound() {
@@ -258,6 +259,21 @@ public class SkierServicesImplTest {
         verify(pisteRepository, times(1)).findById(1L);
         verify(skierRepository, never()).save(any(Skier.class)); // save should not be called
     }
+    //assign skier to piste when skie and piste are found but pistes are null
+    @Test
+    public void testAssignSkierToPiste_NullPistes() {
+        when(skierRepository.findById(1L)).thenReturn(Optional.of(skier));
+        when(pisteRepository.findById(1L)).thenReturn(Optional.of(new Piste()));
+
+        skier.setPistes(null);  // Force pistes to be null to trigger the catch block
+
+        Skier result = skierServices.assignSkierToPiste(1L, 1L);
+
+        assertNotNull(result.getPistes());
+        assertEquals(1, result.getPistes().size());
+        verify(skierRepository, times(1)).save(skier);
+    }
+
 
     // Test for retrieveSkier method
     @Test
