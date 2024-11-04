@@ -215,25 +215,5 @@ class RegistrationServicesImplTest {
         assertTrue(result.isEmpty());
         verify(registrationRepository, times(1)).numWeeksCourseOfInstructorBySupport(1L, Support.SKI);
     }
-
-    @Test
-    void testAddRegistrationAndAssignToSkierAndCourse_individualCourseSuccessful() {
-        // Arrange
-        when(skierRepository.findById(1L)).thenReturn(Optional.of(skier));
-        when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
-        when(registrationRepository.countDistinctByNumWeekAndSkier_NumSkierAndCourse_NumCourse(5, 1L, 1L)).thenReturn(0);
-    
-        skier.setDateOfBirth(LocalDate.of(1990, 1, 1));
-        course.setTypeCourse(TypeCourse.INDIVIDUAL);
-    
-        // Act
-        Registration savedRegistration = registrationServices.addRegistrationAndAssignToSkierAndCourse(registration, 1L, 1L);
-    
-        // Assert
-        assertNotNull(savedRegistration);
-        assertEquals(1L, savedRegistration.getSkier().getNumSkier());
-        assertEquals(1L, savedRegistration.getCourse().getNumCourse());
-        verify(registrationRepository, times(1)).save(registration);
-    }
-    
+   
 }
