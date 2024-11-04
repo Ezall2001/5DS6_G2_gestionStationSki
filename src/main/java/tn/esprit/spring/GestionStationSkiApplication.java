@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class GestionStationSkiApplication {
 
 	public static void main(String[] args) {
+		System.out.println("Hello, World!");
 		SpringApplication.run(GestionStationSkiApplication.class, args);
 	}
 

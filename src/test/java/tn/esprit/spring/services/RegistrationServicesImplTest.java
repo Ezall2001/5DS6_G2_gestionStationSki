@@ -131,6 +131,7 @@ class RegistrationServicesImplTest {
         when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
         when(registrationRepository.countDistinctByNumWeekAndSkier_NumSkierAndCourse_NumCourse(5, 1L, 1L)).thenReturn(0);
         when(registrationRepository.save(any(Registration.class))).thenReturn(registration);
+       
 
 	skier.setDateOfBirth(LocalDate.of(1990, 1, 1));
 	course.setTypeCourse(TypeCourse.INDIVIDUAL);
