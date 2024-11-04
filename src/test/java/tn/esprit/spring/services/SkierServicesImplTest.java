@@ -104,6 +104,12 @@ public class SkierServicesImplTest {
         verify(skierRepository, times(1)).save(skier);
     }
 
+    @Test
+    public void testAddSkier_NullSkier() {
+        Skier savedSkier = skierServices.addSkier(null);
+        assertNull(savedSkier);
+    }
+
     // Test for assignSkierToSubscription method
     @Test
     public void testAssignSkierToSubscription() {
@@ -131,6 +137,17 @@ public class SkierServicesImplTest {
         verify(skierRepository, times(1)).findById(1L);
         verify(subscriptionRepository, never()).findById(anyLong());
         verify(skierRepository, never()).save(any(Skier.class));
+    }
+
+    @Test
+    public void testAssignSkierToSubscription_SubscriptionNotFound() {
+        when(skierRepository.findById(1L)).thenReturn(Optional.of(skier));
+        when(subscriptionRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Skier assignedSkier = skierServices.assignSkierToSubscription(1L, 1L);
+
+        assertNull(assignedSkier);
+        verify(subscriptionRepository, times(1)).findById(1L);
     }
 
     // Test for removeSkier method
@@ -198,5 +215,4 @@ public class SkierServicesImplTest {
 
         verify(skierRepository, times(1)).findBySubscription_TypeSub(TypeSubscription.ANNUAL);
     }
-    //commentaire de test
 }
