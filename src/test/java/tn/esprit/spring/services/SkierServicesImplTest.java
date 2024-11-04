@@ -134,7 +134,7 @@ public class SkierServicesImplTest {
         verify(subscriptionRepository, times(1)).findById(1L);
         verify(skierRepository, times(1)).save(skier);
     }
-
+    //assign skier to sub with skier not found
     @Test
     public void testAssignSkierToSubscription_SkierNotFound() {
         when(skierRepository.findById(1L)).thenReturn(Optional.empty());
@@ -144,6 +144,20 @@ public class SkierServicesImplTest {
         assertNull(assignedSkier);
         verify(skierRepository, times(1)).findById(1L);
         verify(subscriptionRepository, never()).findById(anyLong());
+        verify(skierRepository, never()).save(any(Skier.class));
+    }
+    //assign skier to sub with sub not found
+    @Test
+    public void testAssignSkierToSubscription_SubscriptionNotFound() {
+        when(skierRepository.findById(1L)).thenReturn(Optional.of(skier));
+        when(subscriptionRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Skier assignedSkier = skierServices.assignSkierToSubscription(1L, 1L);
+
+        assertNull(assignedSkier.getSubscription());
+
+        verify(skierRepository, times(1)).findById(1L);
+        verify(subscriptionRepository, times(1)).findById(1L);
         verify(skierRepository, never()).save(any(Skier.class));
     }
 
