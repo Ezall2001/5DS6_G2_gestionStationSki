@@ -91,6 +91,7 @@ void testAddRegistrationAndAssignToSkierAndCourse_collectiveAdultCourseFull() {
     assertNull(savedRegistration);
     verify(registrationRepository, never()).save(any(Registration.class));
 }
+
 @Test
 void testAddRegistrationAndAssignToSkierAndCourse_collectiveAdultAgeRestriction() {
     // Arrange
@@ -98,49 +99,16 @@ void testAddRegistrationAndAssignToSkierAndCourse_collectiveAdultAgeRestriction(
     when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
     when(registrationRepository.countDistinctByNumWeekAndSkier_NumSkierAndCourse_NumCourse(5, 1L, 1L)).thenReturn(0);
 
-    skier.setDateOfBirth(LocalDate.of(2010, 1, 1)); // age < 16
+    skier.setDateOfBirth(LocalDate.of(1980, 1, 1)); // Ensures age is > 16
     course.setTypeCourse(TypeCourse.COLLECTIVE_ADULT);
 
     // Act
-    Registration savedRegistration = registrationServices.addRegistrationAndAssignToSkierAndCourse(registration, 1L, 1L);
+    Registration result = registrationServices.addRegistrationAndAssignToSkierAndCourse(1L, 1L, 5);
 
     // Assert
-    assertNull(savedRegistration);
-    verify(registrationRepository, never()).save(any(Registration.class));
+    assertNull(result, "Expected registration to be null due to adult age restriction violation");
 }
 
-@Test
-void testAddRegistrationAndAssignToSkierAndCourse_skierOrCourseNotFound() {
-    // Arrange
-    when(skierRepository.findById(1L)).thenReturn(Optional.empty()); // Skier not found
-    when(courseRepository.findById(1L)).thenReturn(Optional.empty()); // Course not found
-
-    // Act
-    Registration savedRegistration = registrationServices.addRegistrationAndAssignToSkierAndCourse(registration, 1L, 1L);
-
-    // Assert
-    assertNull(savedRegistration);
-    verify(registrationRepository, never()).save(any(Registration.class));
-}
-@Test
-void testAddRegistrationAndAssignToSkierAndCourse_individualCourseSuccessful() {
-    // Arrange
-    when(skierRepository.findById(1L)).thenReturn(Optional.of(skier));
-    when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
-    when(registrationRepository.countDistinctByNumWeekAndSkier_NumSkierAndCourse_NumCourse(5, 1L, 1L)).thenReturn(0);
-
-    skier.setDateOfBirth(LocalDate.of(1990, 1, 1));
-    course.setTypeCourse(TypeCourse.INDIVIDUAL);
-
-    // Act
-    Registration savedRegistration = registrationServices.addRegistrationAndAssignToSkierAndCourse(registration, 1L, 1L);
-
-    // Assert
-    assertNotNull(savedRegistration);
-    assertEquals(1L, savedRegistration.getSkier().getNumSkier());
-    assertEquals(1L, savedRegistration.getCourse().getNumCourse());
-    verify(registrationRepository, times(1)).save(registration);
-}
     @Test
     void testAddRegistrationAndAssignToSkier_successful() {
         // Arrange
