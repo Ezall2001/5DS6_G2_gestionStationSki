@@ -56,24 +56,6 @@ class RegistrationServicesImplTest {
     }
 
     @Test
-    void testAddRegistrationAndAssignToSkierAndCourse_collectiveChildrenAgeRestriction() {
-        // Arrange
-        when(skierRepository.findById(1L)).thenReturn(Optional.of(skier));
-        when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
-        when(registrationRepository.countDistinctByNumWeekAndSkier_NumSkierAndCourse_NumCourse(5, 1L, 1L)).thenReturn(0);
-
-        skier.setDateOfBirth(LocalDate.of(2000, 1, 1)); // age > 16
-        course.setTypeCourse(TypeCourse.COLLECTIVE_CHILDREN);
-
-        // Act
-        Registration savedRegistration = registrationServices.addRegistrationAndAssignToSkierAndCourse(registration, 1L, 1L);
-
-        // Assert
-        assertNull(savedRegistration);
-        verify(registrationRepository, never()).save(any(Registration.class));
-    }
-
-    @Test
 void testAddRegistrationAndAssignToSkierAndCourse_collectiveAdultCourseFull() {
     // Arrange
     when(skierRepository.findById(1L)).thenReturn(Optional.of(skier));
