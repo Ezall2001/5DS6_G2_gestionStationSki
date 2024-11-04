@@ -185,6 +185,27 @@ public class SkierServicesImplTest {
 
         verify(skierRepository, times(1)).deleteById(1L);
     }
+    //add skier with unsupported type sub
+    @Test
+    public void testAddSkier_WithUnsupportedTypeSub() {
+        // Set up skier with a subscription that has an unsupported TypeSub
+        subscription.setTypeSub(TypeSubscription.UNSUPPORTED); // Hypothetical unsupported type
+        skier.setSubscription(subscription);
+
+        // Mock the save operation
+        when(skierRepository.save(skier)).thenReturn(skier);
+
+        // Call the method
+        Skier savedSkier = skierServices.addSkier(skier);
+
+        // Assert that the skier is saved without setting an end date
+        assertNotNull(savedSkier);
+        assertNull(savedSkier.getSubscription().getEndDate()); // Unsupported types shouldn't set end date
+
+        // Verify save was called once
+        verify(skierRepository, times(1)).save(skier);
+    }
+
 
     // Test for retrieveSkier method
     @Test
