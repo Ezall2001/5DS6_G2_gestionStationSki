@@ -199,4 +199,18 @@ public class SkierServicesImplTest {
         verify(skierRepository, times(1)).findBySubscription_TypeSub(TypeSubscription.ANNUAL);
     }
     //commentaire de test
+    // Edge case for adding a skier with a null subscription
+    //To Ensure that adding a skier without a subscription does not cause an error
+    @Test
+    public void testAddSkier_NullSubscription() {
+        skier.setSubscription(null);
+        when(skierRepository.save(skier)).thenReturn(skier);
+
+        Skier savedSkier = skierServices.addSkier(skier);
+
+        assertNotNull(savedSkier);
+        assertNull(savedSkier.getSubscription());
+
+        verify(skierRepository, times(1)).save(skier);
+    }
 }
