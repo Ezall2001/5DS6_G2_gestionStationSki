@@ -24,7 +24,7 @@ pipeline {
     }
 
     stages {
-        stage('Clean') {
+        stage('Cleanup') {
             steps {
                 script {
                     sh 'mvn clean'
@@ -32,7 +32,7 @@ pipeline {
             }
         }
 
-        stage('Versioning') {
+        stage('Set-Version') {
             steps {
                 script {
 		    sh "mvn versions:set -DnewVersion=${VERSION}"
@@ -40,7 +40,7 @@ pipeline {
             }
         }
 
-        stage('Compile') {
+        stage('Compilation') {
             steps {
                 script {
                     sh 'mvn compile -DskipTests'
@@ -49,7 +49,7 @@ pipeline {
         }
 
 
-        stage('Junit & Mockito') {
+        stage('Unit-Tests') {
             steps {
                 script {
                     sh 'mvn verify test -DskipCompile'
@@ -57,7 +57,7 @@ pipeline {
             }
         }
 
-        stage('Sonar-Test') {
+        stage('Sonar-Analysis') {
             steps {
 		script {
                     sh 'mvn sonar:sonar -Dsonar.host.url=http://sonar:9000'
@@ -65,7 +65,7 @@ pipeline {
             }
         }
 
-        stage('Package') {
+        stage('Packaging') {
             steps {
                 script {
                     sh 'mvn package -DskipTests -DskipCompile'
@@ -73,7 +73,7 @@ pipeline {
             }
         }
 
-        stage('Deploy-Nexus') {
+        stage('Nexus-Deploy') {
             steps {
                 script {
 		    sh "mvn deploy -DskipTests -DskipCompile -DskipPackaging -s mvn-settings.xml -P snapshot"
@@ -81,14 +81,14 @@ pipeline {
             }
         }
 
-        stage('Build-Image') {
+        stage('Image-Build') {
             steps {
                 script {
                     sh "docker build -t ${APP_IMAGE} ."
                 }
             }
         }
-        stage('Push-Image-Dockerhub') {
+        stage('Dockerhub-Push') {
             steps {
                 script {
 		    sh '''
@@ -100,7 +100,7 @@ pipeline {
                 }
             }
         }
-        stage('Deploy-Container') {
+        stage('Container-Deployment') {
             steps {
                 script {
                     sh 'docker-compose down && docker-compose up -d'
