@@ -31,7 +31,7 @@ pipeline {
             }
         }
 
-        stage('Versioning') {
+        stage('Version') {
             steps {
                 script {
 		    sh "mvn versions:set -DnewVersion=${VERSION}"
@@ -39,7 +39,7 @@ pipeline {
             }
         }
 
-        stage('Compile') {
+        stage('Compiling') {
             steps {
                 script {
                     sh 'mvn compile -DskipTests'
@@ -48,7 +48,7 @@ pipeline {
         }
 
 
-        stage('Junit & Mockito') {
+        stage('Junit & Mockito test dynamique ') {
             steps {
                 script {
                     sh 'mvn verify test -DskipCompile'
@@ -56,7 +56,7 @@ pipeline {
             }
         }
 
-        stage('Sonar-Test') {
+        stage('Sonar-Test - statique') {
             steps {
 		script {
                     sh 'mvn sonar:sonar -Dsonar.host.url=http://sonar:9000'
@@ -64,7 +64,7 @@ pipeline {
             }
         }
 
-        stage('Package') {
+        stage('Package-JAR') {
             steps {
                 script {
                     sh 'mvn package -DskipTests -DskipCompile'
@@ -72,7 +72,7 @@ pipeline {
             }
         }
 
-        stage('Deploy-Nexus') {
+        stage('Nexus-Deploy') {
             steps {
                 script {
 		    sh "mvn deploy -DskipTests -DskipCompile -DskipPackaging -s mvn-settings.xml -P snapshot"
@@ -87,7 +87,7 @@ pipeline {
                 }
             }
         }
-        stage('Push-Image-Dockerhub') {
+        stage('IMAGE-Push-Dockerhub') {
             steps {
                 script {
 		    sh '''
