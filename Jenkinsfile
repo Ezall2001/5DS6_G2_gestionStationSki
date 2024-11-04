@@ -114,9 +114,20 @@ pipeline {
         }
         success {
             echo 'Build was successful!'
+            echo 'Build was successful!'
+            emailext(
+            to: 'klairayen123@gmail.com',
+            subject: "Build Successful: ${env.JOB_NAME} ${env.BUILD_NUMBER}",
+            body: "The build was successful.\nCheck details at: ${env.BUILD_URL}"
+        )
         }
         failure {
             echo 'Build failed.'
+            emailext(
+            to: 'klairayen123@gmail.com',
+            subject: "Build Failed: ${env.JOB_NAME} ${env.BUILD_NUMBER}",
+            body: "The build failed.\nCheck details at: ${env.BUILD_URL}"
+        )
         }
     }
 }
