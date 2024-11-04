@@ -90,7 +90,7 @@ pipeline {
             }
         }
 
-        stage('Tag image') {
+        stage('Tag Docker Image') {
             steps {
                 script {
 		    sh '''
@@ -102,7 +102,7 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image to Docker hub') {
+        stage('Push Image to Docker Hub') {
             steps {
                 script {
 		    sh '''
@@ -114,7 +114,7 @@ pipeline {
             }
         }
 
-        stage('Stop and drop Containers') {
+        stage('Stop and Remove Containers') {
             steps {
                 script {
                     sh 'docker-compose down'
@@ -122,11 +122,11 @@ pipeline {
             }
         }
 
-        stage('Remove old image') {
+        stage('Delete Old Docker Image') {
             steps {
                 script {
                     try {
-                        sh 'docker image rm "$DOCKER_REPOSITORY" -f && docker image rm "$DOCKER_REPOSITORY_LATEST" -f && docker image rm "$APP_IMAGE" -f'
+                        sh 'docker image rm "$DOCKER_REPOSITORY" -f && docker image rm "$DOCKER_REPOSITORY_LATEST" -f'
                     } catch (Exception e) {
                         echo "An error occurred while removing old images: ${e.message}"
                     }
@@ -135,7 +135,7 @@ pipeline {
             }
         }
 
-        stage('Pulling images and restart Container') {
+        stage('Pull Images and Restart Containers') {
             steps {
                 script {
                     sh 'docker-compose up -d'
