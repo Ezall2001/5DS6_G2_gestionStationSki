@@ -189,7 +189,7 @@ public class SkierServicesImplTest {
     @Test
     public void testAddSkier_WithUnsupportedTypeSub() {
         // Set up skier with a subscription that has an unsupported TypeSub
-        subscription.setTypeSub(TypeSubscription.UNSUPPORTED); // Hypothetical unsupported type
+        subscription.setTypeSub(null); 
         skier.setSubscription(subscription);
 
         // Mock the save operation
