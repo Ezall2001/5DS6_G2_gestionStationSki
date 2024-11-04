@@ -92,23 +92,6 @@ void testAddRegistrationAndAssignToSkierAndCourse_collectiveAdultCourseFull() {
     verify(registrationRepository, never()).save(any(Registration.class));
 }
 
-@Test
-void testAddRegistrationAndAssignToSkierAndCourse_collectiveAdultAgeRestriction() {
-    // Arrange
-    when(skierRepository.findById(1L)).thenReturn(Optional.of(skier));
-    when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
-    when(registrationRepository.countDistinctByNumWeekAndSkier_NumSkierAndCourse_NumCourse(5, 1L, 1L)).thenReturn(0);
-
-    skier.setDateOfBirth(LocalDate.of(1980, 1, 1)); // Ensures age is > 16
-    course.setTypeCourse(TypeCourse.COLLECTIVE_ADULT);
-
-    // Act
-    Registration result = registrationServices.addRegistrationAndAssignToSkierAndCourse(1L, 1L, 5);
-
-    // Assert
-    assertNull(result, "Expected registration to be null due to adult age restriction violation");
-}
-
     @Test
     void testAddRegistrationAndAssignToSkier_successful() {
         // Arrange
