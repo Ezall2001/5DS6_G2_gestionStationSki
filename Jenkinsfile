@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-	    VERSION = "1.0.${new Date().format('yyyyMMddHHmmss')}-SNAPSHOT"
+	    VERSION = "1.0.${new Date().format('yyyy-MM-dd_HH-mm')}-SNAPSHOT"
 
         SONAR_TOKEN = credentials('SONAR_TOKEN')
 
