@@ -23,7 +23,7 @@ pipeline {
     }
 
     stages {
-        stage('Clean') {
+        stage('Nettoyage') {
             steps {
                 script {
                     sh 'mvn clean'
@@ -31,7 +31,7 @@ pipeline {
             }
         }
 
-        stage('Versioning') {
+        stage('Versionnage') {
             steps {
                 script {
 		    sh "mvn versions:set -DnewVersion=${VERSION}"
@@ -39,7 +39,7 @@ pipeline {
             }
         }
 
-        stage('Compile') {
+        stage('Compilation') {
             steps {
                 script {
                     sh 'mvn compile -DskipTests'
@@ -47,8 +47,7 @@ pipeline {
             }
         }
 
-
-        stage('Junit & Mockito') {
+        stage('Tests Junit & Mockito') {
             steps {
                 script {
                     sh 'mvn verify test -DskipCompile'
@@ -56,7 +55,7 @@ pipeline {
             }
         }
 
-        stage('Sonar-Test') {
+        stage('Analyse Sonar') {
             steps {
 		script {
                     sh 'mvn sonar:sonar -Dsonar.host.url=http://sonar:9000'
@@ -64,7 +63,7 @@ pipeline {
             }
         }
 
-        stage('Package') {
+        stage('Packaging') {
             steps {
                 script {
                     sh 'mvn package -DskipTests -DskipCompile'
@@ -72,7 +71,7 @@ pipeline {
             }
         }
 
-        stage('Deploy-Nexus') {
+        stage('Déploiement sur Nexus') {
             steps {
                 script {
 		    sh "mvn deploy -DskipTests -DskipCompile -DskipPackaging -s mvn-settings.xml -P snapshot"
@@ -80,14 +79,14 @@ pipeline {
             }
         }
 
-        stage('Build-Image') {
+        stage('Construction de l\'Image') {
             steps {
                 script {
                     sh "docker build -t ${APP_IMAGE} ."
                 }
             }
         }
-        stage('Push-Image-Dockerhub') {
+        stage('Push de l\'Image sur Dockerhub') {
             steps {
                 script {
 		    sh '''
@@ -99,10 +98,10 @@ pipeline {
                 }
             }
         }
-        stage('Deploy-Container') {
+        stage('Déploiement du Conteneur') {
             steps {
                 script {
-                    sh 'docker-compose down && docker-compose up -d'
+                    sh 'docker-compose down && docker-compose up -d --build'
                 }
             }
         }
@@ -110,23 +109,22 @@ pipeline {
 
     post {
         always {
-            echo 'Pipeline completed!'
+            echo 'Pipeline terminé !'
         }
         success {
-            echo 'Build was successful!'
-            echo 'Build was successful!'
+            echo 'La construction a réussi !'
             emailext(
             to: 'klairayen123@gmail.com',
-            subject: "Build Successful: ${env.JOB_NAME} ${env.BUILD_NUMBER}",
-            body: "The build was successful.\nCheck details at: ${env.BUILD_URL}"
+            subject: "Succès de la construction : ${env.JOB_NAME} ${env.BUILD_NUMBER}",
+            body: "La construction a réussi.\nVoir les détails à : ${env.BUILD_URL}"
         )
         }
         failure {
-            echo 'Build failed.'
+            echo 'La construction a échoué.'
             emailext(
             to: 'klairayen123@gmail.com',
-            subject: "Build Failed: ${env.JOB_NAME} ${env.BUILD_NUMBER}",
-            body: "The build failed.\nCheck details at: ${env.BUILD_URL}"
+            subject: "Échec de la construction : ${env.JOB_NAME} ${env.BUILD_NUMBER}",
+            body: "La construction a échoué.\nVoir les détails à : ${env.BUILD_URL}"
         )
         }
     }
