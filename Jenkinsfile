@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-	    VERSION = "1.0.${new Date().format('yyyy-MM-dd_HH:mm')}-SNAPSHOT"
+	    VERSION = "1.0.${new Date().format('yyyy-MM-dd_HH-mm')}-SNAPSHOT"
 
         SONAR_TOKEN = credentials('SONAR_TOKEN')
 
@@ -138,7 +138,7 @@ pipeline {
         stage('Pull Images and Restart Containers') {
             steps {
                 script {
-                    sh 'docker-compose up -d'
+                    sh 'docker-compose up -d' 
                 }
             }
         } 
